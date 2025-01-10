@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
 import { DefaultLoginLayoutComponent } from '../../default-login-layout/default-login-layout.component';
 import { PrimaryInputComponent } from '../../components/primary-input/primary-input.component';
 import { Router } from '@angular/router';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,9 @@ import { Router } from '@angular/router';
     ReactiveFormsModule,
     PrimaryInputComponent
   ],
+  providers: [
+    LoginService
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -19,7 +23,8 @@ export class LoginComponent {
   loginForm!: FormGroup;
 
   constructor(
-    private router:Router
+    private router:Router,
+    private loginService: LoginService
   ) {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -27,9 +32,19 @@ export class LoginComponent {
     });
   }
 
-  submit(){
-    console.log(this.loginForm.value)
+  submit() {
+    if (this.loginForm.valid) {
+      this.loginService
+        .login(this.loginForm.value.email, this.loginForm.value.password)
+        .subscribe({
+          next: () => console.log('Login realizado com sucesso!'),
+          error: (err) => console.error('Erro ao fazer login:', err),
+        });
+    } else {
+      console.log('Formulário inválido');
+    }
   }
+
 
   navigate(){
     this.router.navigate(["signup"])
