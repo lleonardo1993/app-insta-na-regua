@@ -6,7 +6,11 @@
 
     <div class="btn-whapper">
 
-      <button class="btn-primary" (click)="submit()">{{ primaryBtnText }}</button>
+      <button
+        class="btn-primary"
+        (click)="submit()"
+        [disabled]="disablePrimaryButton"
+        >{{ primaryBtnText }}</button>
       <div class="divider">
         <div></div>
         <span>Or</span>
